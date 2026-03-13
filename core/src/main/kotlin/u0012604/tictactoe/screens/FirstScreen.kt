@@ -91,11 +91,18 @@ class FirstScreen(
                     }
 
                     is GameMessage.GameOverMessage -> {
-                        Gdx.app.log(TAG, "THE SERVER HAS SENT THE GAME OVER MESSAGE")
+                        Gdx.app.log(TAG, "THE SERVER HAS SENT THE GAME OVER MESSAGE. Winner Token: ${gm.winnerToken}")
 
-                        gameStarted = false
+                        val resultText = when (gm.winnerToken.toInt()) {
+                            1 -> if (localPlayerToken == Token.NOUGHT) "YOU WON!" else "YOU LOST!"
+                            2 -> if (localPlayerToken == Token.CROSS) "YOU WON!" else "YOU LOST!"
+                            else -> "IT'S A DRAW!"
+                        }
 
-                        gameOver = true
+                        val gameOverScreen = game.getScreen<GameOverScreen>()
+                        gameOverScreen.resultText = resultText
+
+                        game.setScreen<GameOverScreen>()
                     }
 
                     is GameMessage.JoinGameMessage -> {

@@ -27,7 +27,14 @@ sealed class GameMessage(val type: GameMessageType) : Serializable {
 
     object StartGameMessage : GameMessage(GameMessageType.START_GAME)
 
-    object GameOverMessage : GameMessage(GameMessageType.GAME_OVER)
+    class GameOverMessage(val winnerToken: Byte) : GameMessage(GameMessageType.GAME_OVER) {
+        companion object {
+            fun deserialize(buffer: ByteBuffer): GameOverMessage {
+                return GameOverMessage(buffer.get())
+            }
+        }
+        override fun serialize() = byteArrayOf(type.id, winnerToken)
+    }
 
     // -----------------------------------------------------------------------------------------------
     data class JoinGameMessage(val token: Token) : GameMessage(GameMessageType.JOIN_GAME) {

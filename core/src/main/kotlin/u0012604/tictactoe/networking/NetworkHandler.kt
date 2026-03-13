@@ -152,7 +152,7 @@ class NetworkHandler(
         when(messageType) {
             GameMessageType.START_GAME -> GameMessage.StartGameMessage
 
-            GameMessageType.GAME_OVER -> GameMessage.GameOverMessage
+            GameMessageType.GAME_OVER -> GameMessage.GameOverMessage.deserialize(this)
 
             GameMessageType.JOIN_GAME -> GameMessage.JoinGameMessage.deserialize(this)
 
