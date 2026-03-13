@@ -150,6 +150,10 @@ class NetworkHandler(
         val messageType = GameMessageType.fromByte(get())
 
         when(messageType) {
+            GameMessageType.START_GAME -> GameMessage.StartGameMessage
+
+            GameMessageType.GAME_OVER -> GameMessage.GameOverMessage
+
             GameMessageType.JOIN_GAME -> GameMessage.JoinGameMessage.deserialize(this)
 
             GameMessageType.PLACE_TOKEN -> GameMessage.PlaceTokenMessage.deserialize(this)

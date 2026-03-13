@@ -28,6 +28,10 @@ class FirstScreen(
     private val sendChannel: SendChannel<GameMessage>
 ) : KtxScreen, InputProcessor {
 
+    private var gameStarted = false
+
+    private var gameOver = false
+
     private val batch = SpriteBatch()
 
 
@@ -56,6 +60,12 @@ class FirstScreen(
     override fun render(delta: Float) {
         clearScreen(red = 0.7f, green = 0.7f, blue = 0.7f)
 
+        if(gameOver) {
+            game.setScreen<GameOverScreen>()
+            disposeSafely()
+            return
+        }
+
         camera.update()
 
         batch.use { board.draw(it) }
@@ -73,6 +83,21 @@ class FirstScreen(
                 val gm = receiveChannel.receive()
 
                 when(gm) {
+
+                    is GameMessage.StartGameMessage -> {
+                        Gdx.app.log(TAG, "THE SERVER HAS STARTED THE GAME")
+
+                        gameStarted = true
+                    }
+
+                    is GameMessage.GameOverMessage -> {
+                        Gdx.app.log(TAG, "THE SERVER HAS SENT THE GAME OVER MESSAGE")
+
+                        gameStarted = false
+
+                        gameOver = true
+                    }
+
                     is GameMessage.JoinGameMessage -> {
                         localPlayerToken = gm.token
 
@@ -114,7 +139,7 @@ class FirstScreen(
         button: Int
     ): Boolean {
 
-        if(!localPlayerTurn)
+        if(!gameStarted || !localPlayerTurn)
             return true;
 
         val col = ((screenX.toFloat() / Gdx.graphics.width) * 3).toInt()

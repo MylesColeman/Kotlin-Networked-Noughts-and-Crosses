@@ -20,7 +20,7 @@ class Main : KtxGame<KtxScreen>() {
     override fun create() {
         KtxAsync.initiate()
 
-        networkHandler = NetworkHandler("A.B.C.D", 4300, serverChannel, clientChannel)
+        networkHandler = NetworkHandler("10.0.2.2", 4300, serverChannel, clientChannel)
 
         addScreen(FirstScreen(this, clientChannel, serverChannel))
 

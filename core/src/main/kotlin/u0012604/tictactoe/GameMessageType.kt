@@ -12,7 +12,9 @@ interface Deserializable {
 
 enum class GameMessageType(val id: Byte) {
     JOIN_GAME(1),
-    PLACE_TOKEN(2);
+    PLACE_TOKEN(2),
+    START_GAME(3),
+    GAME_OVER(4);
 
     companion object {
         fun fromByte(id: Byte) = entries.first { it.id == id }
@@ -22,6 +24,10 @@ enum class GameMessageType(val id: Byte) {
 sealed class GameMessage(val type: GameMessageType) : Serializable {
 
     override fun serialize() = byteArrayOf(type.id)
+
+    object StartGameMessage : GameMessage(GameMessageType.START_GAME)
+
+    object GameOverMessage : GameMessage(GameMessageType.GAME_OVER)
 
     // -----------------------------------------------------------------------------------------------
     data class JoinGameMessage(val token: Token) : GameMessage(GameMessageType.JOIN_GAME) {
